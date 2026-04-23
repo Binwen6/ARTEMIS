@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/binwen6/Lecture/3D\u8ba1\u7b97\u673a\u56fe\u5f62\u5b66/\u8bfe\u7a0b\u5b9e\u9a8c\u9879\u76ee/Accelerated-Ray-Tracing-and-Enhanced-Marching-for-Integrated-flocking-with-point-cloudS/CLGLInterop/build/cmake_install.cmake",
+		"/Users/binwen6/Lecture/3D\u8ba1\u7b97\u673a\u56fe\u5f62\u5b66/\u8bfe\u7a0b\u5b9e\u9a8c\u9879\u76ee/Accelerated-Ray-Tracing-and-Enhanced-Marching-for-Integrated-flocking-with-point-cloudS/CLGLInterop/build/external_sources/glad/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
