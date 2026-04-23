@@ -58,7 +58,7 @@
 
 ---
 
-## 四、 总结：ARTEMIS 的思路闭环
+## 四、 总结：本项目的思路闭环
 
 1.  **输入**：一段文字或一张图。
 2.  **生成**：确定 3D 目标点云。
@@ -67,3 +67,54 @@
 5.  **呈现**：最终在用户面前展现出如梦似幻、不断演变的 3D 视觉奇观。
 
 ---
+
+# 复现指南
+
+本指南旨在帮助你快速搭建并运行集成 Python 深度学习（Point-E） 与 C++ / OpenCL / OpenGL (底层渲染) 的混合项目。
+
+1. 设备与系统要求 (System Requirements)
+项目核心涉及点云生成（深度学习）与粒子渲染（高性能计算），对硬件驱动有特定要求。
+操作系统支持
+
+|平台	| 支持状态	| 备注 |
+| -----| -----| ----|
+|Windows	|强烈推荐	| 完全原生支持。拥有完善的 OpenCL/OpenGL 驱动，兼容性极佳，体验最稳定。|
+|macOS	| 支持 (有局限)	| 支持编译运行，项目已针对 Apple 芯片做兼容处理。但由于 Apple 已弃用 OpenCL/OpenGL，新版本系统（M 系列芯片）可能出现 API 警告且无法享受 Metal 加速。|
+
+环境依赖
+```
+• Python: 3.8+（推荐 3.9，用于 Point-E 运行）
+• C++ 编译器: 支持 C++ 17 (GCC / Clang / MSVC)
+• 构建工具: CMake 3.16.1+
+• 底层库: • GPU 驱动自带的 OpenCL (\ge 1.2) • OpenGL (\ge 3.3) • GLFW 3.3、ZLIB
+• macOS 安装命令: brew install cmake glfw zlib
+```
+
+2. Step-by-Step 复现指南
+复现流程分为：Python 端生成点云 与 C++ 端执行粒子渲染。
+A. AI 点云生成端 (Python)
+利用 OpenAI 的 Point-E 将图片或文本转化为 3D 空间的离散点云坐标（.npy 格式）。
+
+```
+1. 配置 Python 环境 建议使用 Conda 创建独立环境： conda create -n artemis_env python=3.9 conda activate artemis_env
+2. 安装 Point-E 及依赖 进入点云生成目录并安装： cd point-e pip install -e . # 注：你可能还需要根据设备前往 PyTorch 官网获取对应的 torch 安装命令
+3. 运行并提取点云 启动 Jupyter Notebook： jupyter notebook  • 打开 point_e/examples/image2pointcloud.ipynb 或 text2pointcloud.ipynb。 • 按照代码逻辑运行，最后会输出包含 (x, y, z, r, g, b) 等特征的 Numpy (.npy) 文件。 • 关键步骤：将生成的 .npy 文件放入 CLGLInterop/assets/point-cloud-300M 目录下。
+```
+
+B. 核心粒子群落与渲染端 (C++ / OpenCL)
+基于 OpenCL 实现 Boids 群落算法，通过 GPU 高并行渲染点云。
+
+```
+1. 进入编译目录 cd ../CLGLInterop mkdir build && cd build
+2. 编译项目 • Linux / macOS / Windows (MinGW): cmake .. make -j8 • Windows (MSVC): cmake .. cmake --build . --config Release
+3. 运行可执行文件 编译成功后，在 build/examples/ 目录下找到 raymarching 文件： ./examples/raymarching
+```
+
+3. 交互操作说明 (Interaction Controls)
+在渲染窗口激活状态下，你可以通过以下按键进行实时交互：
+按键	功能描述
+1 - 9	在不同的点云模型之间自由切换（自动加载 assets 目录下的模型）
+Q / W / E / R / T / Y / U	切换模型快捷键扩展
+P	暂停 / 继续 粒子群运动
+SPACE (空格)	切换 Ray marching 绘制模式
+鼠标拖拽 / 滚轮	全方位自由视角的摄像机漫游
