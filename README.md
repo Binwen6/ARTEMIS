@@ -1,6 +1,7 @@
 # xjtu-COMP500127-proj
 
-> **项目全称**：Accelerated Ray Tracing and Enhanced Marching for Integrated flocking with point cloudS
+> **项目全称**：面向点云集成群体动画的加速光线追踪与增强步进方法
+
 > **核心目标**：实现从“文字/图像意向”到“动态感性三维实体”的全链路生成与实时交互展示。
 
 ---
