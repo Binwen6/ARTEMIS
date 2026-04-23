@@ -1,6 +1,6 @@
 *.npy
 *.png
-*.jpg
+# *.jpg
 *.jpeg
 *.gif
 *.bmp
